@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.16)
 project(test)
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory("glfw-3.4")
+find_package(glfw3 REQUIRED)
+
+# add_subdirectory("glfw-3.4")
 add_executable(test
 		src/main.cpp
 		include/glad/glad.h
