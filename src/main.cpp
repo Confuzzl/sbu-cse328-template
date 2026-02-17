@@ -1,6 +1,11 @@
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 #define GLFW_INCLUDE_NONE
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
+
 
 #include <iostream>
 
@@ -9,29 +14,33 @@ int main() {
 		std::cerr << "GLFW FAILED TO INIT\n";
 		return 1;
 	}
+	glfwWindowHint(GLFW_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_VERSION_MINOR, 6);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	auto *window = glfwCreateWindow(640, 480, "Test", NULL, NULL);
-	if (!window) {
-		std::cerr << "WINDOW FAILED TO CREATE\n";
-		glfwTerminate();
-		return 1;
-	}
+	const float scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
 
+	std::cout << "scale: " << scale << "\n";
+	
+	GLFWwindow *window = glfwCreateWindow(scale * 1200, scale * 900, "Test", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
-	gladLoadGL();
 	glfwSwapInterval(1);
 
-	while (!glfwWindowShouldClose(window)) {
-		glViewport(0, 0, 640, 480);
-		glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO &io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; 
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
 
-		glfwSwapBuffers(window);
+	ImGui::StyleColorsDark();
+
+	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 	}
 
-	glfwDestroyWindow(window);	
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+	glfwDestroyWindow(window);
 	glfwTerminate();
 }
