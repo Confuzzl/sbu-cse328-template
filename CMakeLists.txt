@@ -7,8 +7,8 @@ if (WIN32)
 endif()
 
 find_package(glfw3 REQUIRED)
-
 add_subdirectory("glm")
+add_subdirectory("imgui")
 
 add_executable(test
 		"src/main.cpp"
@@ -19,6 +19,4 @@ add_executable(test
 target_include_directories(test PUBLIC include)
 target_link_libraries(test glfw)
 target_link_libraries(test glm::glm)
-
-# find_package(OpenGL REQUIRED)
-# find_package(glfw3 REQUIRED)
+target_link_libraries(test imgui)

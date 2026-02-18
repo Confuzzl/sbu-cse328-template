@@ -11,8 +11,12 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 
+
 # clangd cache
 .cache/
+
+# linux build
+build/
 
 # visual studio build
 out/
