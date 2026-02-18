@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 if (WIN32)
 	list(APPEND CMAKE_PREFIX_PATH "C:/Program Files (x86)/GLFW/lib/cmake")
 endif()
-
 find_package(glfw3 REQUIRED)
 add_subdirectory("glm")
 add_subdirectory("imgui")
@@ -15,7 +14,7 @@ add_executable(test
 		"include/glad/glad.h"
 		"src/glad.c"
 		"include/KHR/khrplatform.h"
-		"include/app.h" "include/window.h" "src/app.cpp" "src/window.cpp")
+		"include/app.h"  "src/app.cpp"  "include/gl_object.h" "include/glsl_object.h" "include/util.h" "src/util.cpp" "src/glsl_object.cpp")
 target_include_directories(test PUBLIC include)
 target_link_libraries(test glfw)
 target_link_libraries(test glm::glm)
