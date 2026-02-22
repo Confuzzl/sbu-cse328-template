@@ -2,14 +2,31 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
-struct App {
+#include "input/input_handler.h"
+#include "renderer.h"
+#include "scene.h"
+
+struct Initializer {
   GLFWwindow *window = nullptr;
+  static constexpr glm::ivec2 DEFAULT_DIMENSIONS{1280, 720};
+  glm::ivec2 framebufferSize;
+  glm::ivec2 windowSize;
+
+  Initializer();
+};
+struct App : Initializer {
+  Renderer renderer;
+  InputHandler input;
+
+  Scene scene;
 
   App();
   ~App();
 
   void run();
+  void close();
 };
 
 App &app();

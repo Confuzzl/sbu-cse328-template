@@ -1,13 +1,54 @@
 #pragma once
 
+#include "glad/gl.h"
+#include <fmt/format.h>
+// #include <algorithm>
+#include <random>
+#include <stdexcept>
 #include <string_view>
+#include <type_traits>
+
+// #define THROW_ERR(...) throw std::runtime_error{fmt::format("ERROR AT ")};
+// #define FOO fmt::format("ERROR: at " __FILE__ " on line {}", __LINE__)
+//
+// static auto foo = FOO;
 
 #define MOVE_ONLY_TYPE(type)                                                   \
   type(const type &) = delete;                                                 \
-  type(type &&o);                                                              \
+  type(type &&o) noexcept;                                                     \
   type &operator=(const type &) = delete;                                      \
-  type &operator=(type &&o);
+  type &operator=(type &&o) noexcept;
 
 void print_info(const std::string_view str);
 void print_warn(const std::string_view str);
 void print_err(const std::string_view str);
+
+template <typename T = int>
+T random_int(const T a = std::numeric_limits<T>::min(),
+             const T b = std::numeric_limits<T>::max()) {
+  static_assert(std::is_integral_v<T>, "type must be integral");
+  static std::random_device rd;
+  static std::mt19937 mt{rd()};
+
+  return std::uniform_int_distribution<T>{a, b}(mt);
+}
+
+// C++20 ONLY
+// template <std::size_t N> struct nttp_str {
+//  char m[N];
+//  constexpr nttp_str(const char (&s)[N]) { std::copy_n(s, N, m); }
+//};
+
+namespace GL {
+std::string_view getErrorName();
+
+template <typename T> constexpr GLenum macroOf();
+template <> constexpr GLenum macroOf<GLbyte>() { return GL_BYTE; }
+template <> constexpr GLenum macroOf<GLubyte>() { return GL_UNSIGNED_BYTE; }
+template <> constexpr GLenum macroOf<GLshort>() { return GL_SHORT; }
+template <> constexpr GLenum macroOf<GLushort>() { return GL_UNSIGNED_SHORT; }
+template <> constexpr GLenum macroOf<GLint>() { return GL_INT; }
+template <> constexpr GLenum macroOf<GLuint>() { return GL_UNSIGNED_INT; }
+template <> constexpr GLenum macroOf<GLfloat>() { return GL_FLOAT; }
+template <> constexpr GLenum macroOf<GLdouble>() { return GL_DOUBLE; }
+} // namespace GL
